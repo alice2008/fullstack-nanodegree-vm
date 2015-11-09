@@ -8,32 +8,34 @@ import psycopg2
 
 def connect():
     """Connect to the PostgreSQL database.  Returns a database connection."""
-    return psycopg2.connect("dbname=tournament")
+    try:
+        db = psycopg2.connect("dbname=tournament")
+        cursor = db.cursor()
+    except:
+        print ("Error: cannot onnection to tournament database!")
+    return db, cursor
 
 
 def deleteMatches():
     """Remove all the match records from the database."""
-    DB = connect()
-    c = DB.cursor()
-    c.execute("delete from matches")
+    DB, c = connect()
+    c.execute("DELETE FROM matches")
     DB.commit()
     DB.close()
 
 
 def deletePlayers():
     """Remove all the player records from the database."""
-    DB = connect()
-    c = DB.cursor()
-    c.execute("delete from players")
+    DB, c = connect()
+    c.execute("DELETE FROM players")
     DB.commit()
     DB.close()
 
 
 def countPlayers():
     """Returns the number of players currently registered."""
-    DB = connect()
-    c = DB.cursor()
-    c.execute("select count(*) as num from players")
+    DB, c = connect()
+    c.execute("SELECT count(*) AS num FROM players")
     player_count = c.fetchone()
     return player_count[0]
 
@@ -47,9 +49,8 @@ def registerPlayer(name):
     Args:
       name: the player's full name (need not be unique).
     """
-    DB = connect()
-    c = DB.cursor()
-    c.execute("insert into players (name) values (%s)", (name,))
+    DB, c = connect()
+    c.execute("INSERT INTO players (name) VALUES (%s)", (name,))
     DB.commit()
     DB.close()
 
@@ -67,29 +68,24 @@ def playerStandings():
         wins: the number of matches the player has won
         matches: the number of matches the player has played
     """
-    DB = connect()
-    c = DB.cursor()
-    c.execute("select players.id, players.name, count(matches.player_id1) as num \
-        from players left join matches \
-        on players.id = matches.player_id1 \
-        group by players.id \
-        order by players.id")
-    win_table = c.fetchall()
-    #print win_table
-    c.execute("select players.id, players.name, count(matches.player_id2) as num \
-    from players left join matches \
-    on players.id = matches.player_id2 \
-    group by players.id \
-    order by players.id")
-    lose_table = c.fetchall()
-    #print lose_table
-    standings_list = []
-    for i in range(len(win_table)):
-        standing = (win_table[i][0], win_table[i][1], win_table[i][2],
-        win_table[i][2] + lose_table[i][2] )
-        standings_list.append(standing)
-    standings_list = sorted(standings_list, key=lambda standing:standing[2], reverse=True)
+    DB, c = connect()
+
+    # in the 1st submission, reviewer said that I would double-count the players
+    # But players.id can only appear in winnder_id, or loser_id or none in one match
+    # so by counting players.id appearance as winner_id and loser_id,
+    # adding two together should give the total of matches the player has played so far, not just one-round match only.
+    # adding a fake pair in tournament_test.py in testPairings()
+
+    query = "SELECT players.id, players.name, \
+    (SELECT count(*) FROM matches WHERE winner_id = players.id) AS num_of_wins, \
+    (SELECT count(*) FROM matches WHERE winner_id = players.id OR loser_id = players.id) AS num_of_matches \
+    FROM players \
+    ORDER BY num_of_wins DESC \
+    "
+    c.execute(query)
+    standings_list = c.fetchall()
     #print standings_list
+
     DB.close()
     return standings_list
 
@@ -102,9 +98,8 @@ def reportMatch(winner, loser):
       winner:  the id number of the player who won
       loser:  the id number of the player who lost
     """
-    DB = connect()
-    c = DB.cursor()
-    c.execute("insert into matches (player_id1, player_id2) values (%s, %s)", (winner, loser))
+    DB, c = connect()
+    c.execute("INSERT INTO matches (winner_id, loser_id) VALUES (%s, %s)", (winner, loser))
     DB.commit()
     DB.close()
 
@@ -127,6 +122,8 @@ def swissPairings():
     standings = playerStandings()
     pairs = []
     i = 0
+    if len(standings) % 2 != 0:
+        raise ValueError("Number of players should be even number!")
     while i < len(standings):
         pair = (standings[i][0], standings[i][1], standings[i+1][0], standings[i+1][1])
         pairs.append(pair)

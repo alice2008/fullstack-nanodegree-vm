@@ -123,7 +123,20 @@ def testPairings():
         raise ValueError(
             "After one match, players with one win should be paired.")
     print "8. After one match, players with one win are paired."
-
+    # adding another round of matches. Just for testing purpose.
+    reportMatch(pid2, pid1)
+    reportMatch(pid3, pid4)
+    pairings_2nd_round = swissPairings()
+    if len(pairings_2nd_round) != 2:
+        raise ValueError(
+            "For four players, swissPairings should return two pairs.")
+    [(pid1, pname1, pid2, pname2), (pid3, pname3, pid4, pname4)] = pairings_2nd_round
+    correct_pairs_2nd_round = set([frozenset([id3, id1]), frozenset([id2, id4])])
+    actual_pairs_2nd_round = set([frozenset([pid1, pid2]), frozenset([pid3, pid4])])
+    if correct_pairs_2nd_round != actual_pairs_2nd_round:
+        raise ValueError(
+            "After two matches, players with one win should be paired.")
+    print "9. After two matches, players are paired. This not going to happen in real case. Just for testing purpose"
 
 if __name__ == '__main__':
     testDeleteMatches()
