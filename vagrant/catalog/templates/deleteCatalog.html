@@ -1,0 +1,12 @@
+{% extends "main.html" %}
+{% block content %}
+{% include "header.html" %}
+
+<div class="row">
+<h2> Are you sure you want to delete {{catalog.name}}? </h2>
+<form action="{{url_for('deleteCatalog', catalog_name=catalog.name)}}" method="POST">
+	<button type='submit' class="btn btn-default" >Delete</button>
+	<button type='button' class="btn btn-default" onclick='window.history.back()'>Cancel</button>
+</form>
+</div>
+{% endblock %}

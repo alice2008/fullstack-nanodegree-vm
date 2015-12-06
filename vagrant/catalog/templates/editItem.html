@@ -1,0 +1,33 @@
+{% extends "main.html" %}
+{% block content %}
+{% include "header.html" %}
+
+<div class="row">
+	<div class="col-md-6">
+		<h2> Edit Item </h2>
+		<form role="form" action="{{url_for('editItem', catalog_name=catalog.name, item_name=item.name)}}" method="POST">
+			<div class="form-group">
+				<label for="name">Name:</label></br>
+				<input type="text" maxlength="50" class="form-control" name="name" placeholder="{{item.name}}">
+				<label for="description">Description:</label>
+				<textarea class="form-control" maxlength="250" rows="3" name="description" placeholder="{{item.description}}"></textarea></br>
+				<label for="catalog_id">Catalog:</label>
+				<select class="form-control" name="catalog_id">
+					{% for c in catalogs %}
+						{% if c.id == item.catalog_id %}
+							<option value="{{c.id}}" selected>{{c.name}}</option>
+						{% else %}
+							<option value="{{c.id}}">{{c.name}}</option>
+						{% endif %}
+					{% endfor %}
+				</select></br>
+				<button type="submit" class="btn btn-default" id="submit">Save</button>
+				<!-- <a href="{{url_for('showItem', catalog_name=catalog.name)}}"> -->
+				<button type='button' class='btn btn-default' id='cancel_id' name='cancel_name' onclick='window.history.back()' >Cancel</button>
+				<!-- </a> -->
+		</div>
+		</form>
+	</div>
+</div>
+
+{% endblock %}

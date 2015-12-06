@@ -1,0 +1,61 @@
+{% extends "main.html" %}
+{% block content %}
+{% include "header.html" %}
+
+
+<div class="row">
+  <h2> Sign In with Google </h2>
+
+<div id="signinButton">
+	<span class="g-signin"
+	data-scope="openid email"
+	data-clientid="228238409798-t7rc6d7q824p3fqccj5h2b2vl8c8fgii.apps.googleusercontent.com"
+	data-redirecturi="postmessage"
+	data-accesstype="offline"
+	data-cookiepolicy="single_host_origin"
+	data-callback="signInCallback"
+	data-approvalprompt="force">
+</span>
+</div>
+<div id="result"></div>
+
+<!-- Last part of BODY element in file index.html -->
+<script>
+function signInCallback(authResult) {
+  if (authResult['code']) {
+
+    // Hide the sign-in button now that the user is authorized, for example:
+    $('#signinButton').attr('style', 'display: none');
+
+    // Send the code to the server
+    $.ajax({
+      type: 'POST',
+      url: '/gconnect?state={{STATE}}',
+      contentType: 'application/octet-stream; charset=utf-8',
+      success: function(result) {
+        // Handle or verify the server response.
+        if (result) {
+	        $('#result').html('Login successful!</br>' + result + '</br> Redirecting...')
+	        setTimeout(function() {
+	        	window.location.href = '/catalogs';
+	        }, 4000)
+        }
+        else if (authResult['error']) {
+        	console.log('there was an error' + authResult['error']);
+        }
+        else {
+        	$('#result').html('Fail to make a server-side call. Check you configuration and console.')
+        }//else
+      }, // success
+      processData: false,
+      data: authResult['code']
+    }); //ajax
+  } else {
+    // There was an error.
+    console.log('ajax called failed')
+  }
+}
+</script>
+</div>
+
+{% endblock %}

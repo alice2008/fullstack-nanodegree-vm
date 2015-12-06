@@ -1,0 +1,50 @@
+{% extends "main.html" %}
+{% block content %}
+{% include "header.html" %}
+<div>
+	{% with messages = get_flashed_messages() %}
+      {% if messages %}
+
+        <ul>
+        {% for message in messages %}
+            <li> <strong> {{ message }} </strong> </li>
+        {% endfor %}
+        </ul>
+        {% endif %}
+    {% endwith %}
+</div>
+
+<div class="row">
+	<div class="col-md-3">
+		<h2>Categories</h2>
+		{% for c in catalogs %}
+			<!-- <div class="row"> -->
+				<!-- <div class="col-md-4"> -->
+				<a href = "{{url_for('showItem', catalog_name=c.name)}}">
+					<h3>{{c.name}}</h3>
+				</a>
+				<!-- </div> -->
+			<!-- </div> -->
+		{% endfor %}
+	</div>
+
+	<div class="col-md-9 left-border-line">
+	<h2>{{catalog.name}} Items ({{items|length}} items)</h2>
+	{% if catalog.user_id == user_id %}
+		<a href="{{url_for('editCatalog', catalog_name=catalog.name)}}"><button class="btn btn-default">Edit Catalog</button></a>
+		<a href="{{url_for('deleteCatalog', catalog_name=catalog.name)}}"><button class="btn btn-default">Delete Catalog</button></a>
+	{% endif %}
+	</br>
+	<a href="{{url_for('newItem')}}"><h3>Add Item </h3></a>
+	</br>
+	{% for i in items %}
+		<a href="{{url_for('showOneItem', catalog_name=catalog.name, item_name=i.name)}}"><h3>{{i.name}}</h3></a>
+		{% if i.user_id == user_id %}
+			<a href="{{url_for('editItem', catalog_name=catalog.name, item_name=i.name)}}">Edit</a>
+			<a href="{{url_for('deleteItem', catalog_name=catalog.name, item_name=i.name)}}">Delete</a>
+		{% endif %}
+	{% endfor %}
+	</div>
+</div>
+
+{% endblock %}

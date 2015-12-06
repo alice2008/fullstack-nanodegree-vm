@@ -1,0 +1,14 @@
+{% extends "main.html" %}
+{% block content %}
+{% include "header.html" %}
+<div class="row">
+<h2> Are you sure you want to delete {{catalog.name}}/{{item.name}}? </h2>
+<form action="{{url_for('deleteItem', catalog_name=catalog.name, item_name=item.name)}}" method="POST">
+	<button class="btn btn-default" type='submit'>Delete</button>
+	<!-- <a href='{{url_for('showItem', catalog_name=catalog.name)}}'> -->
+	<button type="button" class="btn btn-default" onclick='window.history.back()'>Cancel</button>
+	<!-- </a> -->
+</form>
+</div>
+
+{% endblock %}

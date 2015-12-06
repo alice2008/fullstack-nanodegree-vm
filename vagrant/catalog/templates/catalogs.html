@@ -1,0 +1,47 @@
+{% extends "main.html" %}
+{% block content %}
+{% include "header.html" %}
+
+<div>
+	{% with messages = get_flashed_messages() %}
+      {% if messages %}
+
+        <ul>
+        {% for message in messages %}
+            <li> <strong> {{ message }} </strong> </li>
+        {% endfor %}
+        </ul>
+        {% endif %}
+    {% endwith %}
+</div>
+
+<div class="row">
+	<div class="col-md-3">
+		<h2>Categories</h2>
+		{% if 'username' in session %}
+		<!-- <div class="row"> -->
+			<!-- <div class="col-md-4"> -->
+				<a href="{{url_for('newCatalog')}}"><button class="btn btn-default">Add Catalog</button></a>
+			<!-- </div> -->
+		<!-- </div> -->
+		{% endif %}
+		{% for c in catalogs %}
+			<!-- <div class="row"> -->
+				<!-- <div class="col-md-4"> -->
+				<a href = "{{url_for('showItem', catalog_name=c.name)}}">
+					<h3>{{c.name}}</h3>
+				</a>
+				<!-- </div> -->
+			<!-- </div> -->
+		{% endfor %}
+	</div>
+	<div class="col-md-9 left-border-line">
+		<h2> Latest Items </h2>
+		<a href="{{url_for('newItem')}}"><button class="btn btn-default">Add Item</button></a>
+		{% for i in items %}
+			<a href="{{url_for('showOneItem', catalog_name=i.catalog.name, item_name=i.name)}}"><h3>{{i.name}}</h3></a>
+		{% endfor %}
+	</div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,17 @@
+{% extends "main.html" %}
+{% block content %}
+{% include "header.html" %}
+<div class="row">
+	<div class="col-md-6">
+	<h2>Creat New Catalog</h2>
+<form action="{{url_for('newCatalog')}}", method='POST'>
+	<dl>
+		<dt>Name:</dt>
+		<dd><input type='text', size='30', name='name'></dd>
+	</dl>
+	<button type="submit" class="btn btn-default" id="submit">Create</button>
+	<button type='button' class="btn btn-default" onclick='window.history.back()'>Cancel</button>
+</form>
+</div>
+</div>
+{% endblock %}

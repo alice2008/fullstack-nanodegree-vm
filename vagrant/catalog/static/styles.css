@@ -1,0 +1,77 @@
+* {
+	font-family: "Helvetica Neue Bold", Roboto, Helvetica, Arial, sans-serif;
+	font-weight: 700;
+}
+
+h1 {
+	font-family: "Arial Black", Roboto, Helvetica, Arial, sans-serif;
+	font-size: 30px;
+	color: white;
+	line-height: 30px;
+	font-weight: 300;
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+
+h2 {
+	font-family: "Arial", Roboto, Helvetica, Arial, sans-serif;
+	font-size: 24px;
+	color: #001C41;
+	line-height: 29px;
+}
+
+
+
+h3 {
+	font-size: 18px;
+	color: #f73500;
+	line-height: 7px;
+}
+
+
+ a {
+ 	font-size: 14px;
+ 	color: #0093B9;
+ 	line-height: 17px;
+ }
+
+ .body{
+ 	background-color: #DDDDDD;
+ }
+
+.row{
+	position: relative;
+	background-color: white;
+	padding-left: 20px;
+	padding-top: 20px;
+	padding-bottom: 20px;
+	padding-right: 20px;
+}
+
+.login-button {
+	background-color: #f73500;
+	color:white;
+	margin-top: 15px;
+}
+/*.bottom-align {
+    display: inline-block;
+    vertical-align: bottom;
+    float: none;
+}*/
+/*.right-border-line{
+	padding-right:10px;
+	border-right: 5px solid #ccc;
+}*/
+
+.left-border-line{
+	padding-left:50px;
+	border-left: 1px solid #ccc;
+}
+
+.top-menu {
+	padding-top: 30px;
+	padding-bottom: 30px;
+	background-color: #001C41;
+	margin-bottom: 30px;
+	margin-top: 30px;
+}
